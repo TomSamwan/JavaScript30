@@ -10,18 +10,38 @@
 
   <div class="controls">
     <label for="spacing">Spacing:</label>
-    <input id="spacing" type="range" name="spacing" min="10" max="200" value="10" data-sizing="px">
+    <input id="spacing" type="range" name="spacing" min="10" max="50" value="10" data-sizing="px">
 
     <label for="blur">Blur:</label>
-    <input id="blur" type="range" name="blur" min="0" max="25" value="10" data-sizing="px">
+    <input id="blur" type="range" name="blur" min="0" max="25" value="5" data-sizing="px">
+    
+    <label for="radius">Radius:</label>
+    <input id="radius" type="range" name="radius" min="0" max="200" value="0" data-sizing="px">
 
     <label for="base">Base Color</label>
-    <input id="base" type="color" name="base" value="#ffc600">
+    <input id="base" type="color" name="base" value="#00ff00">
   </div>
 
-  <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
+  <img src="https://fastly.picsum.photos/id/955/400/400.jpg?hmac=xO9OEsYoMY9Ovj90Dr2YvipRHnK5m-tRHJNIMQhbvj4">
 
   <style>
+    :root {
+      --spacing: 10px;
+      --blur: 5px;
+      --base: #0f0;
+      --radius: 0px;
+    }
+
+    img {
+      padding: var(--spacing);
+      background-color: var(--base);
+      filter: blur(var(--blur));
+      border-radius: var(--radius);
+    }
+
+    .hl {
+      color: var(--base);
+    }
 
     /*
       misc styles, nothing to do with CSS variables
@@ -37,7 +57,7 @@
     }
 
     .controls {
-      margin-bottom: 50px;
+      margin-bottom: calc(50px + var(--spacing));
     }
 
     input {
@@ -46,6 +66,27 @@
   </style>
 
   <script>
+    const inputs = document.querySelectorAll(".controls input")
+
+    function handleUpdate() {
+      const suffix = this.dataset.sizing || '';
+
+      // documentElement selects the next possible node of the HTML element
+      // in this case, it selects the root where CSS variables are stored for global scope
+      document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix)
+    }
+
+    document.addEventListener("load", () => {
+      for(i of inputs) handleUpdate
+    })
+    
+    for(input of inputs) {
+      input.addEventListener("change", handleUpdate)
+      
+      // enables live updates WHILST chaning the input values
+      input.addEventListener("mousedown", function() { this.addEventListener("mousemove", handleUpdate)})
+    }
+    
   </script>
 
 </body>
