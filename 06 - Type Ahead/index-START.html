@@ -1,23 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Type Ahead 👀</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="https://fav.farm/🔥" />
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Type Ahead 👀</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="https://fav.farm/🔥" />
+  </head>
+  <body>
+    <form class="search-form">
+      <input type="text" class="search" placeholder="City or State" />
+      <ul class="suggestions">
+        <li>Filter for a city</li>
+        <li>or a state</li>
+      </ul>
+    </form>
+    <script>
+      const endpoint =
+        "https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json";
 
-  <form class="search-form">
-    <input type="text" class="search" placeholder="City or State">
-    <ul class="suggestions">
-      <li>Filter for a city</li>
-      <li>or a state</li>
-    </ul>
-  </form>
-<script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+      const data = [];
+      fetch(endpoint)
+        .then((res) => res.json())
+        .then((res) => data.push(...res));
 
-</script>
-</body>
+      function findMatches(searchTerm, data) {
+        return searchResults = data.filter((place) => {
+          return (
+            place.city.toLowerCase().match(searchTerm) ||
+            place.state.toLowerCase().match(searchTerm)
+          );
+        });
+      }
+
+      function filterResults() {
+        findMatches(this.value.toLowerCase(), data)
+        let html = searchResults
+          .map((match, index) => {
+            const cityName = match.city;
+            const stateName = match.state;
+            return `
+            <li>
+              <span class="name">${cityName}, ${stateName}</span>
+              <span class="population">${match.population}</span>
+            </li>`;
+          })
+          .join("");
+        suggestions.innerHTML = html;
+      }
+
+      const input = document.querySelector(".search");
+      // suggestions can be set here because the event listener calls 
+      // the function AFTER this variable has been set.
+      const suggestions = document.querySelector(".suggestions");
+
+      input.addEventListener("keyup", filterResults);
+    </script>
+  </body>
 </html>
