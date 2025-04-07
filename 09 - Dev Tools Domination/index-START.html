@@ -7,10 +7,11 @@
 </head>
 <body>
 
-  <p onClick="makeGreen()">×BREAK×DOWN×</p>
+  <p class="assert" onClick="makeGreen()">×BREAK×DOWN×</p>
 
   <script>
     const dogs = [{ name: 'Snickers', age: 2 }, { name: 'hugo', age: 8 }];
+    const cats = [{ name: 'Curly', age: 5 }, { name: 'Wurly', age: 3 }];
 
     function makeGreen() {
       const p = document.querySelector('p');
@@ -19,28 +20,70 @@
     }
 
     // Regular
+    console.log('hello')
 
     // Interpolated
+    console.log('Hello I am a %s string', '💩')
 
     // Styled
+    console.log('%c I am some great text', 'font-size: 12px; background: white; color: black')
 
     // warning!
+    console.warn('Go no further!')
 
     // Error :|
+    console.error('Something went bad')
 
     // Info
+    console.info('This is what a console.info looks like 🙂')
 
     // Testing
+    const p = document.querySelector('p')
+
+    console.assert(!p.classList.contains('assert'), '"p" contains "assert"')
 
     // clearing
+    // console.clear()
 
     // Viewing DOM Elements
+    console.dir(p)
 
     // Grouping together
+    dogs.forEach(dog => {
+      console.group(`${dog.name}`)
+      console.log(`This is ${dog.name}`)
+      console.log(`${dog.name} is ${dog.age}`)
+      console.log(`${dog.name} is ${dog.age * 7} dog years old`)
+      console.groupEnd(`${dog.name}`)
+    })
 
     // counting
+    console.count('Tom')
+    console.count('Tom')
+    console.count('Tom')
+    console.count('Tom')
+    console.count('Dom')
+    console.count('Dom')
+    console.count('Dom')
+    console.count('Tom')
+    console.count('Tom')
+    console.count('Mom')
+    console.count('Tom')
+    console.count('Bom')
+    console.count('Bom')
+    console.count('Bom')
 
     // timing
+    console.time('fetching data')
+    fetch('https://api.github.com/users/wesbos')
+    .then(data => data.json())
+    .then(data => {
+      console.timeEnd('fetching data')
+      console.log(data)
+    })
+
+    // table
+    console.table([...dogs, ...cats])
 
   </script>
 </body>
