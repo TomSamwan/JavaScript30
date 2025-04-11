@@ -1,59 +1,63 @@
+// element selectors
 const video = document.querySelector(".player__video");
+const playerControls = document.querySelector('.player__controls')
 const togglePlay = document.querySelector(".player__button");
-const playerControls = document.querySelector(".player__controls");
-const progressBar = document.querySelector(".progress");
-const progress = document.querySelector(".progress__filled");
+const progress = document.querySelector(".progress");
+const progressBar = document.querySelector(".progress__filled");
 const volume = document.querySelector('.player__slider[name="volume"]');
 const playbackSpeed = document.querySelector('.player__slider[name="playbackRate"]');
-const skipButtons = document.querySelectorAll(".player__button[data-skip");
+const skipButtons = document.querySelectorAll("[data-skip]");
+const fullscreen = document.querySelector(".fullscreen");
 
+// functions
 function playPause() {
-  if (video.paused) {
-    video.play();
-  } else {
-    video.pause();
-  }
+  video.paused ? video.play() : video.pause();
+}
+
+function toggleIcon() {
   togglePlay.textContent = video.paused ? "►" : "||";
 }
 
-[togglePlay, video].forEach((control) => {
-  control.addEventListener("click", playPause);
-});
-
-function durationPercent() {
-  progress.style.flexBasis = `${
-    (video.currentTime / video.duration) * (100).toFixed(1)
-  }%`;
+function skip() {
+  video.currentTime += parseFloat(this.dataset.skip);
 }
 
-video.addEventListener("timeupdate", durationPercent);
+function volumeChange() {
+  video.volume = this.value
+}
+
+function playbackRate() {
+  video.playbackRate = this.value;
+}
+
+function handleProgress() {
+  const percent = (video.currentTime / video.duration) * 100;
+  progressBar.style.flexBasis = `${percent}%`;
+}
 
 function scrub(e) {
-  if(scrubbing) {
-    console.log()
-    let progressBarWidth = parseInt(window.getComputedStyle(progressBar).width);
-    let targetPercent = ((e.x / progressBarWidth) * 100).toFixed(1);
-    progress.style.flexBasis = `${((e.x / progressBarWidth) * 100).toFixed(1)}%`;
-    video.currentTime = ((video.duration / 100) * targetPercent);
-  }
+  const scrubTime = (e.offsetX / progress.offsetWidth) * video.duration;
+  video.currentTime = scrubTime;
 }
 
-let scrubbing = false
-progressBar.addEventListener("click", scrub)
-progressBar.addEventListener("mousemove", (e) => { scrubbing && scrub(e) });
-progressBar.addEventListener("mousedown", () => { scrubbing = true; })
-progressBar.addEventListener("mouseup", () => { scrubbing = false })
 
-volume.addEventListener("change", function () {
-  video.volume = this.value;
-});
+// Listeners
+video.addEventListener("click", playPause)
+togglePlay.addEventListener("click", playPause)
+video.addEventListener("play", toggleIcon)
+video.addEventListener("pause", toggleIcon)
+video.addEventListener("timeupdate", handleProgress);
 
-playbackSpeed.addEventListener("change", function () {
-  video.playbackRate = this.value;
-});
+playbackSpeed.addEventListener("change", playbackRate);
+volume.addEventListener("change", volumeChange);
+skipButtons.forEach((btn) => { btn.addEventListener("click", skip) });
+fullscreen.addEventListener("click", function() {
+  console.dir(video)
+  video.requestFullscreen()
+})
 
-skipButtons.forEach((btn) => {
-  btn.addEventListener("click", function () {
-    video.currentTime += parseInt(btn.dataset.skip);
-  });
-});
+let mouseon = false
+progress.addEventListener("click", scrub)
+progress.addEventListener("mousemove", (e) => mouseon && scrub(e) );
+progress.addEventListener("mousedown", () => mouseon = true )
+progress.addEventListener("mouseup", () => mouseon = false )
