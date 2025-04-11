@@ -7,6 +7,18 @@
     <link rel="icon" href="https://fav.farm/🔥" />
   </head>
   <body>
-    <script></script>
+    <script>
+      const keyInput = [];
+      const secretCode = 'konami'
+
+      window.addEventListener("keyup", (e) => {
+        // console.log(e.key);
+        keyInput.push(e.key)
+        keyInput.splice(-secretCode.length -1, keyInput.length - secretCode.length)
+        if(keyInput.join('').includes(secretCode)) {
+          cornify_add()
+        }
+      })
+    </script>
   </body>
 </html>
