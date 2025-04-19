@@ -44,7 +44,7 @@
   </div>
 
   <script>
-    function debounce(func, wait = 20, immediate = true) {
+    function debounce(func, wait = 50, immediate = true) {
       var timeout;
       return function() {
         var context = this, args = arguments;
@@ -59,6 +59,39 @@
       };
     }
 
+    const sliderImages = document.querySelectorAll(".slide-in")
+
+    function checkSlide(e) {
+      console.count(e)
+      sliderImages.forEach(sliderImage => {
+        // scrolled halfway through the image
+        // window.scrollY displays how far the top of the window is from the top of the site page.
+        // window.innerHeight gets the pixel height of the window size.
+        // add them together, how far the bottom of the window is from the top of the page.
+        const slideInAt = (window.scrollY + window.innerHeight)
+        
+        // divide each image height by 2 for the animation activation when scrolled halfway throught each image.
+        sliderImage.height / 2
+
+        // scrolled past the image
+        // gets the Y coordinate from the top of the page to the bottom of each image.
+        const imageBottom = sliderImage.offsetTop + sliderImage.height
+        
+        // if the bottom of the screen has intercepted half of an image height.
+        const isHalfShown = slideInAt > sliderImage.offsetTop;
+
+
+        const isNotScrolledPast = window.scrollY < imageBottom
+        if(isHalfShown && isNotScrolledPast) {
+          sliderImage.classList.add('active')
+        } else {
+          sliderImage.classList.remove('active')
+        }
+      })
+    }
+
+    window.addEventListener("scroll", debounce(checkSlide))
+    window.addEventListener("click", debounce(() => console.log('clicked')))
   </script>
 
   <style>
