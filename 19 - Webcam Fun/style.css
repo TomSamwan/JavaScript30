@@ -11,6 +11,14 @@ html {
   background: #ffc600;
 }
 
+video {
+  display: none;
+}
+
+.photo {
+  transform: scale(-1, 1);
+}
+
 .photobooth {
   background: white;
   max-width: 150rem;
